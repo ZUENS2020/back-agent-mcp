@@ -1,6 +1,6 @@
 {
   "name": "@zuens2020/back-agent-mcp",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "description": "MCP server for executing tasks via Claude Code CLI",
   "type": "module",
   "main": "dist/index.js",
