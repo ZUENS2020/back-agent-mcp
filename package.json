@@ -1,6 +1,6 @@
 {
   "name": "@zuens2020/back-agent-mcp",
-  "version": "1.0.2",
+  "version": "2.0.4",
   "description": "MCP server for executing tasks via Claude Code CLI",
   "type": "module",
   "main": "dist/index.js",
@@ -42,10 +42,12 @@
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.4",
+    "uuid": "^13.0.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {
     "@types/node": "^22.10.5",
+    "@types/uuid": "^10.0.0",
     "tsx": "^4.19.2",
     "typescript": "^5.7.3"
   }
