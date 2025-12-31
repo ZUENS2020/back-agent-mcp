@@ -10,7 +10,7 @@ import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { registerExecuteTaskTool } from './server/tools/execute-task.js';
 import { registerTaskManagementTools } from './task-manager/task-tools.js';
-import { logger, setLogLevel, LogLevel } from './utils/logger.js';
+import { logger, setLogLevel, LogLevel, initLogFile } from './utils/logger.js';
 import { createRequire } from 'module';
 
 const require = createRequire(import.meta.url);
@@ -25,6 +25,9 @@ const SERVER_INFO = {
  * Start the MCP server
  */
 async function main(): Promise<void> {
+  // Initialize log file if LOG_FILE is set
+  initLogFile();
+
   // Set log level from environment variable if provided
   const logLevel = process.env.LOG_LEVEL?.toUpperCase();
   if (logLevel === 'DEBUG') {

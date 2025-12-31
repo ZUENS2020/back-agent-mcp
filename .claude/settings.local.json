@@ -13,7 +13,9 @@
       "Bash(npm ls:*)",
       "Bash(npm view:*)",
       "Bash(npm version major:*)",
-      "Bash(npx:*)"
+      "Bash(npx:*)",
+      "Bash(cat:*)",
+      "Bash(pkill:*)"
     ]
   }
 }
