@@ -57,11 +57,12 @@ export async function executeClaudeTask(options: ExecutionOptions): Promise<Exec
   }
 
   // Build CLI arguments
-  const args = buildCliArgs(task, cwd, additionalArgs);
-  logger.debug(`Claude CLI args: ${JSON.stringify(args)}`);
+  const { args: cliArgs, cwd: spawnCwd } = buildCliArgs(task, cwd, additionalArgs);
+  logger.debug(`Claude CLI args: ${JSON.stringify(cliArgs)}`);
 
   // Spawn the process
-  const claude = spawn('claude', args, {
+  const claude = spawn('claude', cliArgs, {
+    cwd: spawnCwd,
     env: process.env,
     stdio: ['ignore', 'pipe', 'pipe'],
     shell: true, // Use shell to find 'claude' in PATH
@@ -155,12 +156,12 @@ function buildCliArgs(
   task: string,
   workingDirectory?: string,
   additionalArgs: string[] = []
-): string[] {
+): { args: string[]; cwd?: string } {
   const args: string[] = [];
 
-  // Add working directory if specified
+  // Add working directory to allowed directories if specified
   if (workingDirectory) {
-    args.push('--directory', workingDirectory);
+    args.push('--add-dir', workingDirectory);
   }
 
   // Add additional arguments (exclude -p if user provided it, we add it by default)
@@ -171,5 +172,6 @@ function buildCliArgs(
   // This must come immediately before the task
   args.push('-p', task);
 
-  return args;
+  // Return both args and cwd - the working directory will be used as spawn's cwd
+  return { args, cwd: workingDirectory };
 }
