@@ -1,5 +1,5 @@
 {
-  "name": "back-agent-mcp",
+  "name": "@zuens2020/back-agent-mcp",
   "version": "1.0.0",
   "description": "MCP server for executing tasks via Claude Code CLI",
   "type": "module",
@@ -7,19 +7,36 @@
   "bin": {
     "back-agent-mcp": "./dist/index.js"
   },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
     "build": "tsc",
     "dev": "tsx src/index.ts",
     "start": "node dist/index.js",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run build"
   },
   "keywords": [
     "mcp",
     "model-context-protocol",
     "claude-code",
-    "automation"
+    "automation",
+    "claude",
+    "ai"
   ],
+  "author": "ZUENS2020 <shengyuanzhang-zuens2020@outlook.com>",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ZUENS2020/back-agent-mcp.git"
+  },
+  "homepage": "https://github.com/ZUENS2020/back-agent-mcp#readme",
+  "bugs": {
+    "url": "https://github.com/ZUENS2020/back-agent-mcp/issues"
+  },
   "engines": {
     "node": ">=18"
   },

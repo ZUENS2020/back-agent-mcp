@@ -1,0 +1,53 @@
+# Source files
+src/
+*.ts
+!*.d.ts
+
+# Build artifacts
+*.tsbuildinfo
+*.map
+
+# Dependencies
+node_modules/
+
+# Development
+.git/
+.gitignore
+.npmrc
+
+# Tests
+test/
+tests/
+**/*.test.ts
+**/*.spec.ts
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+.travis.yml
+
+# Documentation (keep README.md, LICENSE)
+docs/
+*.md
+!README.md
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Environment
+.env
+.env.local
+
+# Misc
+.npmrc

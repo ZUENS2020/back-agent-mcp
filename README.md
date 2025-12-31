@@ -41,6 +41,12 @@ npm run dev
 npm start
 ```
 
+### Installation
+
+```bash
+npm install @zuens2020/back-agent-mcp
+```
+
 ### Configuration with Claude Desktop
 
 Add the following to your Claude Desktop configuration file:
@@ -54,7 +60,20 @@ Add the following to your Claude Desktop configuration file:
   "mcpServers": {
     "back-agent": {
       "command": "node",
-      "args": ["C:\\Users\\22595\\Desktop\\back-agent-mcp\\dist\\index.js"]
+      "args": ["--experimental-modules", "C:\\Users\\YourUsername\\AppData\\Roaming\\npm\\node_modules\\@zuens2020\\back-agent-mcp\\dist\\index.js"]
+    }
+  }
+}
+```
+
+Or using npx:
+
+```json
+{
+  "mcpServers": {
+    "back-agent": {
+      "command": "npx",
+      "args": ["-y", "@zuens2020/back-agent-mcp"]
     }
   }
 }
