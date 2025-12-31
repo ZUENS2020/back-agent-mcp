@@ -1,0 +1,35 @@
+{
+  "name": "back-agent-mcp",
+  "version": "1.0.0",
+  "description": "MCP server for executing tasks via Claude Code CLI",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "back-agent-mcp": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/index.ts",
+    "start": "node dist/index.js",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "claude-code",
+    "automation"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.4",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.5",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3"
+  }
+}
