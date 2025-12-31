@@ -15,8 +15,16 @@ import { createErrorResponse } from '../../utils/error-handler.js';
  * Input schema for the execute-task tool
  */
 export const executeTaskInputSchema = z.object({
-  task: z.string().describe('The task description to execute with Claude Code'),
-  workingDirectory: z.string().optional().describe('The working directory for Claude Code execution'),
+  task: z.string().describe(
+    'Natural language task description for Claude Code AI. ' +
+    'This is NOT a direct shell command executor. Claude Code is an AI programming assistant ' +
+    'that will interpret your request and use its own tools (Read, Edit, Bash, etc.) to complete the task. ' +
+    'Example: "Create a README file" or "Fix the bug in login.js" or "Run the tests and report results"'
+  ),
+  workingDirectory: z.string().optional().describe(
+    'The working directory for Claude Code execution. ' +
+    'Defaults to the current workspace directory if not specified.'
+  ),
   timeout: z.number().min(1).max(3600).optional().describe('Timeout in seconds (max 3600)'),
   additionalArgs: z.array(z.string()).optional().describe('Additional CLI arguments for Claude Code'),
 });
@@ -30,9 +38,23 @@ export function registerExecuteTaskTool(server: McpServer): void {
   server.registerTool(
     'execute-task',
     {
-      description: 'Execute a development task using Claude Code CLI. ' +
-        'This tool spawns Claude Code as a child process and returns the output. ' +
-        'Useful for automated code generation, refactoring, debugging, and other development tasks.',
+      description: '**IMPORTANT: This is an AI programming assistant tool, NOT a direct shell command executor.**\n\n' +
+        'This tool spawns Claude Code (an AI coding agent) as a subprocess to complete development tasks. ' +
+        'Claude Code will interpret your natural language request and autonomously decide which actions to take ' +
+        '(reading files, editing code, running commands, etc.) to accomplish the goal.\n\n' +
+        '**What it does:**\n' +
+        '- Accepts natural language task descriptions\n' +
+        '- Claude Code AI figures out how to complete the task\n' +
+        '- Returns the AI\'s response and actions taken\n\n' +
+        '**What it does NOT do:**\n' +
+        '- NOT a direct shell/bash command executor\n' +
+        '- Does NOT return raw stdout/stderr from commands\n' +
+        '- For direct command execution, use the Bash tool instead\n\n' +
+        '**Example usage:**\n' +
+        '- "Create a REST API endpoint for user authentication"\n' +
+        '- "Debug why the tests are failing"\n' +
+        '- "Refactor the user module to use TypeScript"\n\n' +
+        'The returned output is Claude Code\'s conversational response, not raw command output.',
       inputSchema: executeTaskInputSchema,
     },
     async (input: unknown): Promise<CallToolResult> => {

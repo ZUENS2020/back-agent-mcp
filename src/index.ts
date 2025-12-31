@@ -9,11 +9,16 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { registerExecuteTaskTool } from './server/tools/execute-task.js';
+import { registerTaskManagementTools } from './task-manager/task-tools.js';
 import { logger, setLogLevel, LogLevel } from './utils/logger.js';
+import { createRequire } from 'module';
+
+const require = createRequire(import.meta.url);
+const packageJson = require('../package.json');
 
 const SERVER_INFO = {
   name: 'back-agent-mcp',
-  version: '1.0.0',
+  version: packageJson.version,
 };
 
 /**
@@ -41,6 +46,9 @@ async function main(): Promise<void> {
     logger.debug('Registering tools...');
     registerExecuteTaskTool(server);
     logger.info('Registered tool: execute-task');
+
+    registerTaskManagementTools(server);
+    logger.info('Registered task management tools');
 
     // Create stdio transport for communication
     logger.debug('Creating StdioServerTransport...');

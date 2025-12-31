@@ -42,21 +42,26 @@ export async function executeClaudeTask(options: ExecutionOptions): Promise<Exec
 
   logger.info(`Executing task: "${task.substring(0, 100)}${task.length > 100 ? '...' : ''}"`);
 
-  // Validate working directory if provided
-  let cwd: string | undefined;
+  // Use current working directory as default if not specified
+  let cwd: string;
   if (workingDirectory) {
     cwd = resolve(workingDirectory);
-    if (!existsSync(cwd)) {
-      throw new McpServerError(
-        ErrorCode.INVALID_WORKING_DIRECTORY,
-        `Working directory does not exist: ${workingDirectory}`,
-        { path: cwd }
-      );
-    }
-    logger.info(`Using working directory: ${cwd}`);
+  } else {
+    // Default to current working directory
+    cwd = process.cwd();
   }
 
-  // Build CLI arguments
+  // Validate working directory exists
+  if (!existsSync(cwd)) {
+    throw new McpServerError(
+      ErrorCode.INVALID_WORKING_DIRECTORY,
+      `Working directory does not exist: ${cwd}`,
+      { path: cwd }
+    );
+  }
+  logger.info(`Using working directory: ${cwd}`);
+
+  // Build CLI arguments (always specify working directory for claude --add-dir)
   const { args: cliArgs, cwd: spawnCwd } = buildCliArgs(task, cwd, additionalArgs);
   logger.debug(`Claude CLI args: ${JSON.stringify(cliArgs)}`);
 
@@ -154,18 +159,24 @@ export async function executeClaudeTask(options: ExecutionOptions): Promise<Exec
  */
 function buildCliArgs(
   task: string,
-  workingDirectory?: string,
+  workingDirectory: string, // Now required - caller must provide default
   additionalArgs: string[] = []
-): { args: string[]; cwd?: string } {
+): { args: string[]; cwd: string } {
   const args: string[] = [];
 
-  // Add working directory to allowed directories if specified
-  if (workingDirectory) {
-    args.push('--add-dir', workingDirectory);
-  }
+  // Always add working directory to allowed directories
+  args.push('--add-dir', workingDirectory);
 
-  // Add additional arguments (exclude -p if user provided it, we add it by default)
-  const filteredArgs = additionalArgs.filter(arg => arg !== '-p' && arg !== '--print');
+  // Filter out invalid arguments for claude CLI (npx/npm flags that might be passed through)
+  const invalidArgs = new Set([
+    '-p', '--print',
+    '-y', '--yes',
+    '-n', '--no', '--no-yes',
+    '--cache',
+    '--ignore-existing',
+  ]);
+
+  const filteredArgs = additionalArgs.filter(arg => !invalidArgs.has(arg));
   args.push(...filteredArgs);
 
   // Add -p flag for one-time execution (non-interactive mode)
